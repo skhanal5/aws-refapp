@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+aws-lambda-powertools = "*"
+pydantic = "*"
+httpx = "*"
+
+[dev-packages]
+pre-commit = "*"
+ruff = "*"
+mypy = "*"
+aws-lambda-powertools = {extras = ["aws-sdk"], version = "*"}
+
+[requires]
+python_version = "3.12"
