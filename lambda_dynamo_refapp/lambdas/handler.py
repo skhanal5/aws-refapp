@@ -1,12 +1,9 @@
 import os
-from typing import List, Annotated
 
 import boto3
 from aws_lambda_powertools.event_handler import ALBResolver, Response
-from aws_lambda_powertools.event_handler.openapi.params import Body
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
-from lambda_dynamo_refapp.models.twitch import User, ClipsResponse
 from lambda_dynamo_refapp.services.clips_service import ClipsService
 from lambda_dynamo_refapp.services.twitch_service import TwitchService
 
