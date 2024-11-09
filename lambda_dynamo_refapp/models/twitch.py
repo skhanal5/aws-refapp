@@ -4,6 +4,7 @@ from pydantic import BaseModel
 class UserRequest(BaseModel):
     user: str
 
+
 class ClipsInfo(BaseModel):
     id: str
     url: str
@@ -23,8 +24,11 @@ class ClipsInfo(BaseModel):
     vod_offset: int
     is_featured: bool
 
+
 class Pagination(BaseModel):
     cursor: str
+
+
 class ClipsResponse(BaseModel):
     data: list[ClipsInfo]
     pagination: Pagination

@@ -73,10 +73,11 @@ class TwitchService:
         response = self._send_get_request(
             endpoint=TwitchService._clips_endpoint, query_params=query_params
         )
-        user_response = ClipsResponse(**response.json())
+        return ClipsResponse(**response.json())
 
-
-    def _send_get_request(self, endpoint: str, query_params: dict[str, str]) -> Response:
+    def _send_get_request(
+        self, endpoint: str, query_params: dict[str, str]
+    ) -> Response:
         headers = self._get_oauth_headers()
         try:
             with Client(base_url=TwitchService._helix_api_url) as client:
