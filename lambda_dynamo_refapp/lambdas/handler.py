@@ -2,12 +2,14 @@ import os
 
 import boto3
 from aws_lambda_powertools.event_handler import ALBResolver, Response
+from aws_lambda_powertools.logging import correlation_paths
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
+from aws_lambda_powertools import Logger
 from lambda_dynamo_refapp.services.clips_service import ClipsService
 from lambda_dynamo_refapp.services.twitch_service import TwitchService
 
-# logger = Logger()
+logger = Logger()
 app = ALBResolver(enable_validation=True)
 
 # Load Env
@@ -37,5 +39,6 @@ def trigger_job():
 
 
 # Register handler function
+@logger.inject_lambda_context(correlation_id_path=correlation_paths.API_GATEWAY_REST)
 def lambda_handler(event: dict, context: LambdaContext):
     return app.resolve(event, context)
