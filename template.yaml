@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Local template
+Globals:
+  Function:
+    Timeout: 3
+Resources:
+  UsersFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./lambda_dynamo_refapp/
+      Handler: lambdas.handler.lambda_handler
+      Runtime: python3.9
+      Events:
+        PostUsers:
+          Type: HttpApi
+          Properties:
+            Path: /users
+            Method: post
