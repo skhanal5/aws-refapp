@@ -23,10 +23,12 @@ You will need to do two things:
 Before you build the local Lambda, first do the following:
 - Install SAM CLI
 - Have Docker running in the background
+- Have your Twitch app's `client-id` and `client-secret` ready
 
 1. Run `pipenv requirements > requirements.txt`. This
 is because SAM looks for a `requirements.txt` to build the project with pip. You will only need to run this again if you change dependencies.
-2. Invoke `sam build`
+2. Update `template.yaml` to pass in the values of `CLIENT_ID` and `CLIENT_SECRET`
+3. Invoke `sam build`
 
 ### Invoking the Lambda Function
 Use `sam local invoke --event events/<name_of_event>.json` to invoke the Lambda function
