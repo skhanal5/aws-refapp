@@ -3,17 +3,18 @@ Transform: AWS::Serverless-2016-10-31
 Description: Local template
 Globals:
   Function:
-    Timeout: 3
+    Timeout: 10
 Resources:
-  UsersFunction:
+  TwitchFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./lambda_dynamo_refapp/
-      Handler: lambdas.handler.lambda_handler
-      Runtime: python3.9
-      Events:
-        PostUsers:
-          Type: HttpApi
-          Properties:
-            Path: /users
-            Method: post
+      Runtime: python3.12
+      CodeUri: .
+      Handler: lambda_dynamo_refapp.lambdas.handler.lambda_handler
+      Environment:
+        Variables:
+          CLIENT_ID: FOO
+          CLIENT_BAR: BAR
+          DYNAMO_TABLE: CLIENT_BAR
+          POWERTOOLS_LOG_LEVEL: INFO
+          POWERTOOLS_SERVICE_NAME: twitch

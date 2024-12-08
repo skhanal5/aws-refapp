@@ -1,0 +1,6 @@
+{
+  "httpMethod": "POST",
+  "path": "/user",
+  "body": "{\"user\": \"plaqueboymax\"}",
+  "isBase64Encoded": false
+}
