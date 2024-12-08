@@ -16,12 +16,12 @@ class TwitchService:
     _clips_endpoint: str = "clips"
 
     def __init__(self, client_id: str, client_secret: str):
-        self.client_id: str = client_id
-        self.client_secret: str = client_secret
-        self.grant_type: str = "client_credentials"
-        self.token: str = ""
-        self.token_created_time: float = 0.0
-        self.token_expiration: float = 0.0
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.grant_type = "client_credentials"
+        self.token = ""
+        self.token_created_time = 0.0
+        self.token_expiration = 0.0
 
     def get_clips_from_broadcaster(self, username: str) -> list[str]:
         self._refresh_token()
