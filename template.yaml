@@ -1,0 +1,24 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Local template
+Globals:
+  Function:
+    Timeout: 50
+Resources:
+  TwitchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: python3.12
+      CodeUri: .
+      Handler: lambda_dynamo_refapp.lambdas.handler.lambda_handler
+      Environment:
+        Variables:
+          CLIENT_ID: Foo
+          CLIENT_SECRET: Bar
+          DYNAMO_TABLE: users
+          AWS_ACCESS_ID: Foo
+          AWS_ACCESS_KEY: Bar
+          ENDPOINT_URL: "http://host.docker.internal:8000"
+          AWS_REGION: us-east-1
+          POWERTOOLS_LOG_LEVEL: INFO
+          POWERTOOLS_SERVICE_NAME: twitch

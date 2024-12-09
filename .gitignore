@@ -1,1 +1,6 @@
 .idea/
+.venv
+.aws-sam
+**.pyc
+requirements.txt
+docker

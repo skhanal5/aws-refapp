@@ -21,7 +21,7 @@ class ClipsInfo(BaseModel):
     created_at: str
     thumbnail_url: str
     duration: float
-    vod_offset: int
+    vod_offset: int | None
     is_featured: bool
 
 

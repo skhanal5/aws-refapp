@@ -1,9 +1,12 @@
 import time
 
 import httpx
+from aws_lambda_powertools import Logger
 from httpx import Client, Response
 
 from lambda_dynamo_refapp.models.twitch import ClipsResponse
+
+logger = Logger()
 
 
 class TwitchService:
@@ -13,16 +16,16 @@ class TwitchService:
     _clips_endpoint: str = "clips"
 
     def __init__(self, client_id: str, client_secret: str):
-        self.client_id: str = client_id
-        self.client_secret: str = client_secret
-        self.grant_type: str = "client_credentials"
-        self.token: str = ""
-        self.token_created_time: float = 0.0
-        self.token_expiration: float = 0.0
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.grant_type = "client_credentials"
+        self.token = ""
+        self.token_created_time = 0.0
+        self.token_expiration = 0.0
 
     def get_clips_from_broadcaster(self, username: str) -> list[str]:
         self._refresh_token()
-        broadcaster_id = self._get_broadcaster(username)
+        broadcaster_id = self._get_broadcaster_id(username)
         clips = self._get_clips(broadcaster_id)
         return TwitchService.extract_clips(clips)
 
@@ -31,7 +34,12 @@ class TwitchService:
         return [clip.url for clip in clips_response.data]
 
     def _refresh_token(self):
+        if not self.token:
+            logger.info("No token found, creating a new oauth token")
+            self._get_oauth()
+
         if time.time() - self.token_created_time > self.token_expiration:
+            logger.info("OAuth token expired, creating a new oauth token")
             self._get_oauth()
 
     def _get_oauth(self):
@@ -43,11 +51,11 @@ class TwitchService:
             self.token_expiration = float(response_dict["expires_in"])
             self.token_created_time = time.time()
         except httpx.RequestError as exc:
-            print(f"An error occurred while requesting {exc.request.url!r}.")
+            logger.info(f"An error occurred while requesting {exc.request.url}.")
             raise exc
         except httpx.HTTPStatusError as exc:
-            print(
-                f"Error response {exc.response.status_code} while requesting {exc.request.url!r}."
+            logger.info(
+                f"Error response {exc.response.status_code} while requesting {exc.request.url}."
             )
             raise exc
 
@@ -59,12 +67,15 @@ class TwitchService:
         }
 
     def _get_oauth_headers(self) -> dict[str, str]:
-        return {"Authorization": "Bearer" + self.token, "Client-Id": self.client_id}
+        return {"Authorization": "Bearer " + self.token, "Client-Id": self.client_id}
 
-    def _get_broadcaster(self, username: str) -> str:
+    def _get_broadcaster_id(self, username: str) -> str:
         query_params = {"login": username}
         response = self._send_get_request(
             endpoint=TwitchService._user_endpoint, query_params=query_params
+        )
+        logger.info(
+            f"When fetching broadcaster_id, received a valid response: {response.json()}"
         )
         return response.json()["data"][0]["id"]
 
@@ -72,6 +83,9 @@ class TwitchService:
         query_params = {"broadcaster_id": broadcaster_id}
         response = self._send_get_request(
             endpoint=TwitchService._clips_endpoint, query_params=query_params
+        )
+        logger.info(
+            f"When fetching user clips, received a valid response: {response.json()}"
         )
         return ClipsResponse(**response.json())
 
@@ -87,10 +101,10 @@ class TwitchService:
                     url=endpoint,
                 )
         except httpx.RequestError as exc:
-            print(f"An error occurred while requesting {exc.request.url!r}.")
+            logger.info(f"An error occurred while requesting {exc.request.url!r}.")
             raise exc
         except httpx.HTTPStatusError as exc:
-            print(
+            logger.info(
                 f"Error response {exc.response.status_code} while requesting {exc.request.url!r}."
             )
             raise exc
