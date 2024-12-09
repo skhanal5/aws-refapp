@@ -8,6 +8,7 @@ pydantic = "*"
 httpx = "*"
 boto3 = "*"
 aws-lambda-powertools = "*"
+boto3-stubs = {extras = ["dynamodb"], version = "*"}
 
 [dev-packages]
 pre-commit = "*"
