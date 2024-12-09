@@ -3,3 +3,4 @@
 .aws-sam
 **.pyc
 requirements.txt
+docker
